@@ -1,15 +1,5 @@
 const CACHE_NAME = "despesas-viagem";
-const assets = [
-  "/",
-  "/index.html",
-  "/css/style.css",
-  "/node_modules/bootstrap/dist/css/bootstrap.css",
-  "/node_modules/select2/dist/css/select2.css",
-  "/node_modules/jquery/dist/jquery.js",
-  "/node_modules/select2/dist/js/select2.js",
-  "/node_modules/bootstrap/dist/js/bootstrap.js",
-  "/js/index.js"
-];
+const assets = ["/", "/index.html", "/css/style.css", "/js/app.js","/manifest.json"];
 
 self.addEventListener("install", (installEvent) => {
   installEvent.waitUntil(
@@ -26,12 +16,12 @@ self.addEventListener("fetch", (fetchEvent) => {
     })
   );
 });
-self.addEventListener('activate', function(event) {
+self.addEventListener("activate", function (event) {
   var cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(function (cacheName) {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }

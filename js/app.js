@@ -11,11 +11,15 @@ $(function () {
 });
 let editingIndex = -1;
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
+  window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/serviceWorker.js")
-      .then((res) => console.log("service worker registrado."))
-      .catch((err) => console.log("service worker não registrado", err));
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker registrado com sucesso:", registration);
+      })
+      .catch((error) => {
+        console.log("Falha ao registrar o Service Worker:", error);
+      });
   });
 }
 
