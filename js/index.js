@@ -14,44 +14,37 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker
       .register("/serviceWorker.js")
-      .then((res) => console.log("service worker registered"))
-      .catch((err) => console.log("service worker not registered", err));
+      .then((res) => console.log("service worker registrado."))
+      .catch((err) => console.log("service worker não registrado", err));
   });
 }
 
 var util = {
   atualizarCodes: function () {
-    // $.ajax({
-    //   url: "https://v6.exchangerate-api.com/v6/codes",
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: "Bearer bd99edd9beed235bf8f56b5f",
-    //   },
-    //   success: function (response) {
-    //     if (response.result === "success") {
-    //       util.preencherselect(response.supported_codes);
-    //     } else {
-    //       alert("Erro ao obter os dados para o Selecionavel");
-    //     }
-    //   },
-    //   error: function () {
-    //     alert("ERROR! verifique a chave da api");
-    //   },
-    // });
-    this.preencherselect([
-      ["USD", "Usa"],
-      ["BRL", "Brazil"],
-      ["EUR", "euro"],
-    ]);
+    $.ajax({
+      url: "https://v6.exchangerate-api.com/v6/codes",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer bd99edd9beed235bf8f56b5f",
+      },
+      success: function (response) {
+        if (response.result === "success") {
+          util.preencherselect(response.supported_codes);
+        } else {
+          alert("Erro ao obter os dados para o Selecionavel");
+        }
+      },
+      error: function () {
+        alert("ERROR! verifique a chave da api");
+      },
+    });
   },
   preencherselect: function (codes) {
-    let options = [];
     codes.forEach((code) => {
       let op = new Option(code[1], code[0], false, false);
-      options.push(op);
+      $(".origin").append($("<option>").val(code[0]).text(code[1]));
+      $(".destino").append(op);
     });
-    $(".origin").append(options);
-    $(".destino").append(options);
   },
   exibirDispesas: function () {
     const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
@@ -106,11 +99,11 @@ var util = {
   editar: function (index) {
     const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
     const expense = expenses[index];
-    document.getElementById("expense-description").value = expense.description;
-    document.getElementById("expense-quantity").value = expense.quantity;
-    document.getElementById("expense-amount").value = expense.amount;
-    document.getElementById("currency-from").value = expense.currencyFrom;
-    document.getElementById("currency-to").value = expense.currencyTo;
+    $(".descricao").val(expense.description);
+    $(".quantidade").val(expense.quantity);
+    $(".valor").val(expense.amount);
+    $(".origin").val(expense.currencyFrom);
+    $(".destino").val(expense.currencyTo);
 
     editingIndex = index;
   },
@@ -118,6 +111,64 @@ var util = {
     let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
     expenses.splice(index, 1);
     localStorage.setItem("expenses", JSON.stringify(expenses));
+    alert("Gasto removido com sucesso!");
     util.exibirDispesas();
+  },
+  adicionar: async function () {
+    const description = $(".descricao").val();
+    const quantity = $(".quantidade").val();
+    const amount = $(".valor").val();
+    const currencyFrom = $(".origin").val();
+    const currencyTo = $(".destino").val();
+
+    if (
+      description === "" ||
+      quantity === "" ||
+      amount === "" ||
+      Number.isNaN(amount) ||
+      Number.isNaN(quantity)
+    ) {
+      alert(
+        "Por favor, preencha todos os campos ou verifique os dados e tente novamente."
+      );
+      return;
+    }
+
+    const response = await fetch(
+      `https://v6.exchangerate-api.com/v6/bd99edd9beed235bf8f56b5f/latest/${currencyFrom}`
+    );
+    const data = await response.json();
+    const rate = data.conversion_rates[currencyTo];
+    const convertedAmount = (quantity * amount * rate).toFixed(2);
+
+    const expense = {
+      description,
+      quantity: parseFloat(quantity),
+      amount: parseFloat(amount),
+      currencyFrom,
+      currencyTo,
+      convertedAmount: parseFloat(convertedAmount),
+    };
+
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+    if (editingIndex === -1) {
+      expenses.push(expense);
+    } else {
+      expenses[editingIndex] = expense;
+      editingIndex = -1;
+    }
+
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    util.limparDadosForm();
+    util.exibirDispesas();
+  },
+  limparDadosForm: function () {
+    $(".descricao").val("");
+    $(".quantidade").val("");
+    $(".valor").val("");
+    $(".origin").val("BRL").trigger("change");
+    $(".destino").val("BRL").trigger("change");
   },
 };

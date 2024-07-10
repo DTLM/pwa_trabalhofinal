@@ -28,3 +28,56 @@ input {
   margin: 0;
   padding: 0 !important;
 }
+#lista {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#lista li {
+  background-color: #e0e0e0;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-button {
+  margin-left: auto;
+  border-radius: 12px;
+  padding: 5px 10px; 
+  background-color: #ff0004; 
+  color: #ffffff; 
+  border: none; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.remove-button i {
+  margin-left: 1px;
+}
+
+.remove-button:hover {
+  background-color: #b30021;
+}
+
+.edit-button {
+  margin-left: auto; 
+  border-radius: 12px; 
+  padding: 5px 10px;
+  background-color: #04154c; 
+  color: #ffffff; 
+  border: none; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button:hover {
+  background-color: #3273cd;
+}
