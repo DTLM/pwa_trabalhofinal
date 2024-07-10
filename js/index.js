@@ -25,7 +25,7 @@ var util = {
       url: "https://v6.exchangerate-api.com/v6/codes",
       method: "GET",
       headers: {
-        Authorization: "Bearer bd99edd9beed235bf8f56b5f",
+        Authorization: "Bearer ",
       },
       success: function (response) {
         if (response.result === "success") {
@@ -135,7 +135,7 @@ var util = {
     }
 
     const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/bd99edd9beed235bf8f56b5f/latest/${currencyFrom}`
+      `https://v6.exchangerate-api.com/v6//latest/${currencyFrom}`
     );
     const data = await response.json();
     const rate = data.conversion_rates[currencyTo];
