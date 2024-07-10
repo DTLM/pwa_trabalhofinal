@@ -1,5 +1,14 @@
 const CACHE_NAME = "despesas-viagem";
-const assets = ["/", "/index.html", "/css/style.css", "/js/app.js","/manifest.json"];
+const assets = [
+  "/",
+  "/index.html",
+  "/css/style.css",
+  "/js/app.js",
+  "/manifest.json",
+  "/image/icon-192x192.ico",
+  "/image/icon-192x192.png",
+  "/image/icon-512x512.png",
+];
 
 self.addEventListener("install", (installEvent) => {
   installEvent.waitUntil(
